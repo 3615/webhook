@@ -1,0 +1,22 @@
+image: alpine/edge
+packages:
+- docker
+- docker-compose
+- make
+- shadow
+sources:
+- https://github.com/3615/webhook.git
+tasks:
+- setup: |
+    sudo mount -t tmpfs -o size=4G /dev/null /dev/shm
+    sudo service cgroups start
+    sleep 2
+    sudo nohup dockerd --bip 172.18.0.1/16 </dev/null >/dev/null 2>&1 &
+    sleep 5
+    sudo usermod -aG docker $(whoami)
+    cd webhook
+    git checkout $(echo $GITHUB_REF | cut -c12-)
+
+- build: |
+    cd webhook
+    make build

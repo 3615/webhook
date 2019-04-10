@@ -1,0 +1,26 @@
+stages:
+  - docker
+
+image: mykiwi/docker
+services:
+- docker:dind
+variables:
+  DOCKER_DRIVER: overlay2
+  COMPOSE_FILE: "docker-compose.yaml:docker-compose.gitlab-ci.yaml"
+
+.template-load-gitlab-image: &internal-image
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+
+infos:
+  <<: *internal-image
+  stage: docker
+  script:
+    - docker --version
+    - docker-compose --version
+
+build-docker-images:
+  <<: *internal-image
+  stage: docker
+  script:
+    - make build
