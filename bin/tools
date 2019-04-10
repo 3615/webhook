@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Helper to run commands inside the tools container
+
+command -v docker-compose > /dev/null
+if [ $? -ne 0 ]; then
+    exec "$@"
+fi
+
+CONTAINER=$(docker-compose ps -q tools)
+if [ -z "${CONTAINER}" ]; then
+    docker-compose up -d tools &> /dev/null
+else
+    IS_RUNNING=$(docker inspect --format '{{.State.Running}}' $CONTAINER)
+    [ "${IS_RUNNING}" = 'false' ] && docker-compose up -d tools &> /dev/null
+fi
+
+if [ $# -eq 0 ]; then
+    CMD="sh"
+else
+    CMD="$@"
+    if [ $1 = 'composer' ]; then
+        CMD="php -d memory_limit=-1 /usr/local/bin/composer ${@:2}"
+    fi
+fi
+
+docker-compose exec $(tty > /dev/null 2>&1 || echo "-T") tools entrypoint ${CMD}

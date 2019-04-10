@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  db:
+#     ports:
+#       - '5432:5432'
+
+  cache:
+#     ports:
+#       - '6379:6379'
+
+  http:
+    environment:
+      - BLACKFIRE_CLIENT_ID
+      - BLACKFIRE_CLIENT_TOKEN
+#     ports:
+#       - '80:80'
+
+  tools:
+    volumes:
+      - ~/.composer/cache:/home/.composer/cache
+
+###############################################################################
+
+#   adminer:
+#     image: adminer
+#     ports:
+#       - 8080:8080

@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:11.2-alpine
+
+  cache:
+    image: redis:5.0-alpine
+
+  http:
+    image: 3615/webhook:dev
+    volumes:
+      - ./:/srv
+
+  workers:
+    image: 3615/webhook:dev
+    command: supervisord --nodaemon --configuration /etc/supervisor/workers.conf
+    volumes:
+      - ./:/srv
+
+
+  tools:
+    image: 3615/webhook:tools
+    command: sleep 999d
+    volumes:
+      - ./:/srv
