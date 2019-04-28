@@ -1,7 +1,7 @@
 PHP_VERSION			= 7.3
 
 FIG 				= docker-compose
-DOCKER_BUILD_ARGS 	= --build-arg PHP_VERSION=$(PHP_VERSION)
+DOCKER_BUILD_ARGS	= --build-arg PHP_VERSION=$(PHP_VERSION)
 
 TOOLS				= bin/tools
 
@@ -21,6 +21,7 @@ ARTEFACTS			= var/artefacts
 build:
 	DOCKER_BUILDKIT=1 docker build --pull $(DOCKER_BUILD_ARGS) --target http-dev  --tag 3615/webhook:dev   .
 	DOCKER_BUILDKIT=1 docker build        $(DOCKER_BUILD_ARGS) --target tools     --tag 3615/webhook:tools .
+	$(FIG) build
 
 kill:
 	$(FIG) kill
@@ -34,6 +35,7 @@ reset: kill install
 
 start: ## Start the project
 	$(FIG) up -d --remove-orphans --no-recreate
+	$(FIG) ps
 
 stop: ## Stop the project
 	$(FIG) stop

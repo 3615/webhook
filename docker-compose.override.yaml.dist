@@ -1,28 +1,56 @@
 version: '3.7'
 
 services:
-  db:
-#     ports:
-#       - '5432:5432'
+  postgresql:
+#    ports:
+#      - '5432:5432'
 
-  cache:
-#     ports:
-#       - '6379:6379'
+  redis:
+#    ports:
+#      - '6379:6379'
+
+  elasticsearch:
+#    ports:
+#      - '9200:9200'
+
+#  https:
+#    build:
+#      context: .docker/haproxy
+#    image: 3615/haproxy
+#    ports:
+#      - '443:443'
+#    environment:
+#      HAPROXY_DEFAULT_SSL_CERT: |
+#        -----BEGIN RSA PRIVATE KEY-----
+#        foo==
+#        -----END RSA PRIVATE KEY-----
+#        -----BEGIN CERTIFICATE-----
+#        bar==
+#        -----END CERTIFICATE-----
+#        -----BEGIN CERTIFICATE-----
+#        baz==
+#        -----END CERTIFICATE-----
+#        -----BEGIN RSA PRIVATE KEY-----
 
   http:
+#    ports:
+#      - '80:80'
     environment:
       - BLACKFIRE_CLIENT_ID
       - BLACKFIRE_CLIENT_TOKEN
-#     ports:
-#       - '80:80'
 
   tools:
     volumes:
-      - ~/.composer/cache:/home/.composer/cache
+      - ~/.composer/cache:/home/.composer/cache:cached
 
 ###############################################################################
 
-#   adminer:
-#     image: adminer
-#     ports:
-#       - 8080:8080
+#  adminer:
+#    image: adminer
+#    ports:
+#      - '8080:8080'
+
+#  kibana:
+#    image: kibana:7.0.0
+#    ports:
+#      - '5601:5601'
